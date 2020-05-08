@@ -1,0 +1,57 @@
+spring:
+    application:
+        name: EurekaService
+api:
+   eureka:
+     security:
+        user:
+          name: sonuapi
+          password: sonuapi
+          
+management:
+    endpoints:
+        web:
+            exposure:
+                include: info, health
+#server:
+#  port: 8761
+#eureka:
+#  instance:
+#    hostname: reference.local.gateway
+#  client:
+#    registerWithEureka: false
+#    fetchRegistry: false
+#    serviceUrl:
+#      defaultZone: http://${api.eureka.security.user.name}:${api.eureka.security.user.password}@${eureka.instance.hostname}:${server.port}/eureka
+---
+spring:
+  profiles: peer1 
+server:
+   port: 8761
+eureka:
+  instance:
+    hostname: reference.local.gateway
+    non-secure-port-enabled: true
+    non-secure-port: 8762
+#    leaseRenewalIntervalInSeconds: 20
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${api.eureka.security.user.name}:${api.eureka.security.user.password}@reference:8762
+---
+spring:
+  profiles: peer2 
+server:
+   port: 8762
+eureka:
+  instance:
+    hostname: reference
+    non-secure-port-enabled: true
+    non-secure-port: 8761
+#   leaseRenewalIntervalInSeconds: 20
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${api.eureka.security.user.name}:${api.eureka.security.user.password}@reference.local.gateway:8761
